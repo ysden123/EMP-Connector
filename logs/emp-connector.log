@@ -1,8 +1,0 @@
-2019-03-11 10:24:08.750 [main] INFO  c.s.e.connector.example.LoginExample - Login with yuriy as user to https://login.salesforce.com
-2019-03-11 10:24:12.777 [main] ERROR c.s.e.connector.example.LoginExample - Unable to login: INVALID_LOGIN: Invalid username, password, security token; or user locked out.
-java.net.ConnectException: Unable to login: INVALID_LOGIN: Invalid username, password, security token; or user locked out.
-	at com.salesforce.emp.connector.LoginHelper.login(LoginHelper.java:138)
-	at com.salesforce.emp.connector.LoginHelper.login(LoginHelper.java:100)
-	at com.salesforce.emp.connector.example.LoginExample.lambda$main$0(LoginExample.java:43)
-	at com.salesforce.emp.connector.example.BearerTokenProvider.login(BearerTokenProvider.java:24)
-	at com.salesforce.emp.connector.example.LoginExample.main(LoginExample.java:52)

@@ -9,3 +9,5 @@
 **/.classpath
 **/.DS_Store
 \.idea/
+
+logs/

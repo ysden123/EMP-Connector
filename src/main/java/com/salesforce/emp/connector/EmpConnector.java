@@ -6,16 +6,6 @@
  */
 package com.salesforce.emp.connector;
 
-import java.net.ConnectException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.Message;
 import org.cometd.bayeux.client.ClientSessionChannel;
@@ -25,6 +15,14 @@ import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.ConnectException;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author hal.hildebrand
@@ -126,6 +124,7 @@ public class EmpConnector {
 
     /**
      * Start the connector.
+     *
      * @return true if connection was established, false otherwise
      */
     public Future<Boolean> start() {
@@ -175,14 +174,11 @@ public class EmpConnector {
     /**
      * Subscribe to a topic, receiving events after the replayFrom position
      *
-     * @param topic
-     *            - the topic to subscribe to
-     * @param replayFrom
-     *            - the replayFrom position in the event stream
-     * @param consumer
-     *            - the consumer of the events
+     * @param topic      - the topic to subscribe to
+     * @param replayFrom - the replayFrom position in the event stream
+     * @param consumer   - the consumer of the events
      * @return a Future returning the Subscription - on completion returns a Subscription or throws a CannotSubscribe
-     *         exception
+     * exception
      */
     public Future<TopicSubscription> subscribe(String topic, long replayFrom, Consumer<Map<String, Object>> consumer) {
         if (!running.get()) {
@@ -205,12 +201,10 @@ public class EmpConnector {
     /**
      * Subscribe to a topic, receiving events from the earliest event position in the stream
      *
-     * @param topic
-     *            - the topic to subscribe to
-     * @param consumer
-     *            - the consumer of the events
+     * @param topic    - the topic to subscribe to
+     * @param consumer - the consumer of the events
      * @return a Future returning the Subscription - on completion returns a Subscription or throws a CannotSubscribe
-     *         exception
+     * exception
      */
     public Future<TopicSubscription> subscribeEarliest(String topic, Consumer<Map<String, Object>> consumer) {
         return subscribe(topic, REPLAY_FROM_EARLIEST, consumer);
@@ -219,12 +213,10 @@ public class EmpConnector {
     /**
      * Subscribe to a topic, receiving events from the latest event position in the stream
      *
-     * @param topic
-     *            - the topic to subscribe to
-     * @param consumer
-     *            - the consumer of the events
+     * @param topic    - the topic to subscribe to
+     * @param consumer - the consumer of the events
      * @return a Future returning the Subscription - on completion returns a Subscription or throws a CannotSubscribe
-     *         exception
+     * exception
      */
     public Future<TopicSubscription> subscribeTip(String topic, Consumer<Map<String, Object>> consumer) {
         return subscribe(topic, REPLAY_FROM_TIP, consumer);
@@ -347,7 +339,7 @@ public class EmpConnector {
         }
 
         private boolean isError(Message message, String errorCode) {
-            String error = (String)message.get(Message.ERROR_FIELD);
+            String error = (String) message.get(Message.ERROR_FIELD);
             String failureReason = getFailureReason(message);
 
             return (error != null && error.startsWith(errorCode)) ||
@@ -358,9 +350,9 @@ public class EmpConnector {
             String failureReason = null;
             Map<String, Object> ext = message.getExt();
             if (ext != null) {
-                Map<String, Object> sfdc = (Map<String, Object>)ext.get("sfdc");
+                Map<String, Object> sfdc = (Map<String, Object>) ext.get("sfdc");
                 if (sfdc != null) {
-                    failureReason = (String)sfdc.get("failureReason");
+                    failureReason = (String) sfdc.get("failureReason");
                 }
             }
             return failureReason;
