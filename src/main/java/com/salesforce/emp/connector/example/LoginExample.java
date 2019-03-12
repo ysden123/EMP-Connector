@@ -59,7 +59,9 @@ public class LoginExample {
 
         connector.start().get(5, TimeUnit.SECONDS);
 
-        TopicSubscription subscription = connector.subscribe(argv[2], replayFrom, consumer).get(5, TimeUnit.SECONDS);
+        var topic = "someTestTopic";
+
+        TopicSubscription subscription = connector.subscribe(topic, replayFrom, consumer).get(5, TimeUnit.SECONDS);
 
         System.out.println(String.format("Subscribed: %s", subscription));
     }
