@@ -5,7 +5,7 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%C:%L] - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -13,14 +13,16 @@
         <file>logs/emp-connector.log</file>
         <append>false</append>
         <encoder>
-            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%C:%L] - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>
 
     <logger name="org.eclipse" level="error"/>
+    <logger name="org.cometd.client" level="error"/>
+
 </configuration>

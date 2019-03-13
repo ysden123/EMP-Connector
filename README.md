@@ -119,11 +119,10 @@ For more information about the components of the EMP Connector and a walkthrough
  
 ## YS Experiments
 
-### BearTokenExample
-#### Data Change
-Parameters: https://test.salesforce.com sE7H1T9AAM4MJBq9uyUMLsPy /data/ChangeEvents
-
-#### ???
-Parameters: https://test.salesforce.com sE7H1T9AAM4MJBq9uyUMLsPy /services/Soap/u/44.0/
-
+Use YSDevLoginExample
+Input, system environment variables:
+ - EM_ENDPOINT - url, e.g. https://test.salesforce.com
+ - EM_USER - user name
+ - EM_PASS - user password
+ - EM_TOKEN - token
 
