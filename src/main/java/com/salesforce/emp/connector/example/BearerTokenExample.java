@@ -15,6 +15,8 @@ import com.salesforce.emp.connector.EmpConnector;
 import com.salesforce.emp.connector.TopicSubscription;
 import org.cometd.bayeux.Channel;
 import org.eclipse.jetty.util.ajax.JSON;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An example of using the EMP connector using bearer tokens
@@ -23,7 +25,10 @@ import org.eclipse.jetty.util.ajax.JSON;
  * @since API v37.0
  */
 public class BearerTokenExample {
+    private static Logger logger = LoggerFactory.getLogger(BearerTokenExample.class);
+
     public static void main(String[] argv) throws Exception {
+        logger.info("==>main");
         if (argv.length < 2 || argv.length > 4) {
             System.err.println("Usage: BearerTokenExample url token topic [replayFrom]");
             System.exit(1);
@@ -37,11 +42,13 @@ public class BearerTokenExample {
 
             @Override
             public String bearerToken() {
+                logger.info("==>bearerToken");
                 return argv[1];
             }
 
             @Override
             public URL host() {
+                logger.info("==>host");
                 try {
                     return new URL(argv[0]);
                 } catch (MalformedURLException e) {
@@ -50,17 +57,33 @@ public class BearerTokenExample {
             }
         };
 
-        Consumer<Map<String, Object>> consumer = event -> System.out.println(String.format("Received:\n%s", JSON.toString(event)));
+        Consumer<Map<String, Object>> consumer = event -> logger.info("Received: {}", JSON.toString(event));
         EmpConnector connector = new EmpConnector(params);
 
+/*
         connector.addListener(Channel.META_CONNECT, new LoggingListener(true, true))
-        .addListener(Channel.META_DISCONNECT, new LoggingListener(true, true))
-        .addListener(Channel.META_HANDSHAKE, new LoggingListener(true, true));
+                .addListener(Channel.META_DISCONNECT, new LoggingListener(true, true))
+                .addListener(Channel.META_HANDSHAKE, new LoggingListener(true, true));
+*/
 
-        connector.start().get(5, TimeUnit.SECONDS);
+        try {
+            connector.start().get(5, TimeUnit.SECONDS);
 
-        TopicSubscription subscription = connector.subscribe(argv[2], replayFrom, consumer).get(5, TimeUnit.SECONDS);
+            if (connector.isConnected()) {
 
-        System.out.println(String.format("Subscribed: %s", subscription));
+                TopicSubscription subscription = connector.subscribe(argv[2], replayFrom, consumer).get(5, TimeUnit.SECONDS);
+
+                logger.info("Subscribed: {}", subscription);
+            }
+
+            Thread.sleep(3000);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+            System.exit(1);
+        } finally {
+            if (connector.isConnected())
+                connector.stop();
+        }
+        logger.info("<==main");
     }
 }
